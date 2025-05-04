@@ -1,0 +1,47 @@
+import { parseArgs } from "node:util";
+import { Command } from "./constants.js";
+
+export const router = async ({ argv, printHelp, pkg }) => {
+  try {
+    const { values, positionals } = parseArgs({
+      args: argv,
+      options: {
+        help: { type: "boolean", short: "h" },
+        version: { type: "boolean", short: "v" },
+      },
+      allowPositionals: true,
+      strict: false,
+    });
+
+    if (values.version) {
+      console.log(pkg.version);
+      return;
+    }
+    if (values.help) {
+      printHelp();
+      return;
+    }
+
+    console.log(values, positionals);
+
+    const [cmd, ...args] = positionals;
+
+    switch (cmd) {
+      case Command.LS:
+        return (await import(`../commands/${Command.LS}.js`)).default(args);
+      case Command.CD:
+        return (await import(`../commands/${Command.CD}.js`)).default(args);
+      case Command.UP:
+        return (await import(`../commands/${Command.UP}.js`)).default(args);
+
+      case Command.EXIT:
+        process.exit(0); // graceful shutdown
+
+      default:
+        console.error(`Unknown command: ${cmd}`);
+        printHelp();
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+};
