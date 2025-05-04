@@ -1,7 +1,7 @@
-import { parseArgs } from "node:util";
+import { parseArgs, styleText } from "node:util";
 import { Command } from "./constants.js";
 
-export const router = async ({ argv, printHelp, pkg }) => {
+export const router = async ({ argv, printHelp, pkg, username }) => {
   try {
     const { values, positionals } = parseArgs({
       args: argv,
@@ -22,8 +22,6 @@ export const router = async ({ argv, printHelp, pkg }) => {
       return;
     }
 
-    console.log(values, positionals);
-
     const [cmd, ...args] = positionals;
 
     switch (cmd) {
@@ -34,11 +32,23 @@ export const router = async ({ argv, printHelp, pkg }) => {
       case Command.UP:
         return (await import(`../commands/${Command.UP}.js`)).default(args);
 
-      case Command.EXIT:
+      case Command.EXIT: {
+        console.log(
+          styleText(
+            ["yellowBright"],
+            `\nThank you for using File Manager, ${
+              username ? username + ", " : ""
+            }goodbye!`
+          )
+        );
         process.exit(0); // graceful shutdown
+      }
 
       default:
-        console.error(`Unknown command: ${cmd}`);
+        console.error(
+          styleText(["red"], "[Invalid input]:"),
+          styleText(["cyan"], "Command not found")
+        );
         printHelp();
     }
   } catch (error) {

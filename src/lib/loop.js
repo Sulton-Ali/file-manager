@@ -1,9 +1,13 @@
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { router } from "./router.js";
+import { styleText } from "node:util";
 
-export async function runShell({ pkg, printHelp }) {
-  const makePrompt = () => `${process.cwd()} $ `;
+export async function runShell({ pkg, printHelp, username }) {
+  const makePrompt = () =>
+    "You are currently in " +
+    styleText(["underline"], ` ${process.cwd()} `) +
+    "\n$ ";
   const rl = createInterface({ input, output, prompt: makePrompt() });
 
   const refresh = () => rl.setPrompt(makePrompt());
@@ -11,14 +15,15 @@ export async function runShell({ pkg, printHelp }) {
 
   let interrupted = false;
   rl.on("SIGINT", () => {
-    if (interrupted) {
-      rl.close();
-    } else {
-      console.log("\n(press Ctrl+C again to quit)");
-      interrupted = true;
-      rl.prompt();
-      setTimeout(() => (interrupted = false), 1000);
-    }
+    console.log(
+      styleText(
+        ["yellowBright"],
+        `\nThank you for using File Manager, ${
+          username ? username + ", " : ""
+        }goodbye!`
+      )
+    );
+    rl.close();
   });
 
   for await (const line of rl) {
@@ -27,7 +32,7 @@ export async function runShell({ pkg, printHelp }) {
         .match(/(?:[^\s"]+|"[^"]*")+/g)
         ?.map((s) => s.replace(/^"|"$/g, "")) ?? [];
 
-    await router({ argv: tokens, printHelp, pkg });
+    await router({ argv: tokens, printHelp, pkg, username });
     refresh();
     rl.prompt();
   }

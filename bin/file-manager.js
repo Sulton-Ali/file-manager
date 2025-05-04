@@ -2,9 +2,11 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runShell } from "../src/lib/loop.js";
+import { styleText } from "node:util";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(resolve(__dirname, "../package.json")));
+let username;
 
 const printHelp = () =>
   console.log(`
@@ -20,13 +22,19 @@ const printHelp = () =>
 process.chdir(process.env["HOME"]);
 
 if (process.argv.length > 2) {
-  const { router } = await import("../src/lib/router.js");
-  await router({
-    argv: process.argv.slice(2),
-    printHelp,
-    pkg,
-  });
-  process.exit();
+  const usernameIndex = process.argv.findIndex((arg) =>
+    arg.startsWith("--username")
+  );
+  if (usernameIndex !== -1) {
+    username = process.argv[usernameIndex].split("=")[1];
+  }
 }
 
-await runShell({ pkg, printHelp });
+console.log(
+  styleText(
+    ["blueBright"],
+    `Welcome to the File Manager${username ? ", " + username : ""}!`
+  )
+);
+
+await runShell({ pkg, printHelp, username });
