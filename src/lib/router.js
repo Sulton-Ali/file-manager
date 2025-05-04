@@ -1,5 +1,6 @@
 import { parseArgs, styleText } from "node:util";
 import { Command } from "./constants.js";
+import { InputError } from "./model.js";
 
 export const router = async ({ argv, printHelp, pkg, username }) => {
   try {
@@ -31,6 +32,8 @@ export const router = async ({ argv, printHelp, pkg, username }) => {
         return (await import(`../commands/${Command.CD}.js`)).default(args);
       case Command.UP:
         return (await import(`../commands/${Command.UP}.js`)).default(args);
+      case Command.CAT:
+        return (await import(`../commands/${Command.CAT}.js`)).default(args);
 
       case Command.EXIT: {
         console.log(
@@ -52,6 +55,10 @@ export const router = async ({ argv, printHelp, pkg, username }) => {
         printHelp();
     }
   } catch (error) {
-    console.error(error.message);
+    if (error instanceof InputError) {
+      console.error(error.error);
+    } else {
+      console.error(error.message);
+    }
   }
 };
