@@ -1,0 +1,18 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "desciption": "Modern CLI Tool",
+  "type": "module",
+  "scripts": {
+    "start": "node ./bin/file-manager.js",
+    "dev": "node --watch ./bin/file-manager.js"
+  },
+  "keywords": [
+    "Nodejs",
+    "CLI",
+    "File Manager"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
