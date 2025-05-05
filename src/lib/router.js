@@ -40,6 +40,12 @@ export const router = async ({ argv, printHelp, pkg, username }) => {
         return (await import(`../commands/${Command.RM}.js`)).default(args);
       case Command.MKDIR:
         return (await import(`../commands/${Command.MKDIR}.js`)).default(args);
+      case Command.RN:
+        return (await import(`../commands/${Command.RN}.js`)).default(args);
+      case Command.CP:
+        return (await import(`../commands/${Command.CP}.js`)).default(args);
+      case Command.MV:
+        return (await import(`../commands/${Command.MV}.js`)).default(args);
 
       case Command.EXIT: {
         console.log(

@@ -7,4 +7,7 @@ export const Command = {
   ADD: "add",
   RM: "rm",
   MKDIR: "mkdir",
+  RN: "rn",
+  CP: "cp",
+  MV: "mv",
 };
