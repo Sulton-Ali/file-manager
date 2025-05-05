@@ -5,4 +5,6 @@ export const Command = {
   EXIT: ".exit",
   CAT: "cat",
   ADD: "add",
+  RM: "rm",
+  MKDIR: "mkdir",
 };
