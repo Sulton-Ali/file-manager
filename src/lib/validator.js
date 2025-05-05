@@ -12,7 +12,7 @@ export const validatePathAndResolve = async (filepath) => {
     await fs.access(filename);
   } catch (err) {
     if (err.code === "ENOENT") {
-      throw new StyledError("File not found", "Operation Error");
+      throw new StyledError("File not found", "Operation failed");
     } else {
       throw err;
     }

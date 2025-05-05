@@ -9,6 +9,11 @@ export const router = async ({ argv, printHelp, pkg, username }) => {
       options: {
         help: { type: "boolean", short: "h" },
         version: { type: "boolean", short: "v" },
+        EOL: { type: "boolean" },
+        cpus: { type: "boolean" },
+        homedir: { type: "boolean" },
+        username: { type: "boolean" },
+        architecture: { type: "boolean" },
       },
       allowPositionals: true,
       strict: false,
@@ -46,6 +51,21 @@ export const router = async ({ argv, printHelp, pkg, username }) => {
         return (await import(`../commands/${Command.CP}.js`)).default(args);
       case Command.MV:
         return (await import(`../commands/${Command.MV}.js`)).default(args);
+      case Command.HASH:
+        return (await import(`../commands/${Command.HASH}.js`)).default(args);
+      case Command.COMPRESS:
+        return (await import(`../commands/${Command.COMPRESS}.js`)).default(
+          args
+        );
+      case Command.DECOMPRESS:
+        return (await import(`../commands/${Command.DECOMPRESS}.js`)).default(
+          args
+        );
+      case Command.OS:
+        return (await import(`../commands/${Command.OS}.js`)).default(
+          args,
+          values
+        );
 
       case Command.EXIT: {
         console.log(

@@ -10,4 +10,8 @@ export const Command = {
   RN: "rn",
   CP: "cp",
   MV: "mv",
+  OS: "os",
+  HASH: "hash",
+  COMPRESS: "compress",
+  DECOMPRESS: "decompress",
 };
