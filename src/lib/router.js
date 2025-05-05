@@ -1,6 +1,6 @@
 import { parseArgs, styleText } from "node:util";
 import { Command } from "./constants.js";
-import { InputError } from "./model.js";
+import { logError } from "./logger.js";
 
 export const router = async ({ argv, printHelp, pkg, username }) => {
   try {
@@ -55,10 +55,6 @@ export const router = async ({ argv, printHelp, pkg, username }) => {
         printHelp();
     }
   } catch (error) {
-    if (error instanceof InputError) {
-      console.error(error.error);
-    } else {
-      console.error(error.message);
-    }
+    logError(error);
   }
 };

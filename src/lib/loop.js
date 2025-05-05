@@ -2,6 +2,7 @@ import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { router } from "./router.js";
 import { styleText } from "node:util";
+import { logError } from "./logger.js";
 
 export async function runShell({ pkg, printHelp, username }) {
   const makePrompt = () =>
@@ -13,7 +14,6 @@ export async function runShell({ pkg, printHelp, username }) {
   const refresh = () => rl.setPrompt(makePrompt());
   rl.prompt();
 
-  let interrupted = false;
   rl.on("SIGINT", () => {
     console.log(
       styleText(
@@ -32,7 +32,7 @@ export async function runShell({ pkg, printHelp, username }) {
         .match(/(?:[^\s"]+|"[^"]*")+/g)
         ?.map((s) => s.replace(/^"|"$/g, "")) ?? [];
 
-    await router({ argv: tokens, printHelp, pkg, username });
+    await router({ argv: tokens, printHelp, pkg, username }).catch(logError);
     refresh();
     rl.prompt();
   }

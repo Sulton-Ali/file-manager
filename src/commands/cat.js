@@ -1,19 +1,22 @@
 import { createReadStream } from "node:fs";
-import { InputError } from "../lib/model.js";
+import { StyledError } from "../lib/model.js";
 import path from "node:path";
+import fs from "node:fs/promises";
 
-export default function cat(args) {
+export default async function cat(args) {
   const filepath = args[0];
   if (!filepath) {
-    throw new InputError("File path not provided");
+    throw new StyledError("File path not provided", "Input Error");
   }
 
-  return new Promise((resolve) => {
-    const readable = createReadStream(path.resolve(process.cwd(), filepath));
-
-    readable.pipe(process.stdout);
-    readable.on("end", () => {
-      resolve();
-    });
-  });
+  try {
+    const filename = path.resolve(process.cwd(), filepath);
+    await fs.access(filename);
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      throw new StyledError("File not found", "Operation Error");
+    } else {
+      throw err;
+    }
+  }
 }

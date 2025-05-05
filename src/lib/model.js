@@ -1,14 +1,15 @@
 import { styleText } from "node:util";
 
-export class InputError extends Error {
-  constructor(message) {
-    this.message = message;
+export class StyledError extends Error {
+  constructor(message, name) {
+    super(message);
+    this.name = name;
   }
 
-  get error() {
+  getError() {
     return (
-      styleText(["red"], "[Invalid input]: ") +
-      styleText("blueBright", this.message)
+      styleText(["red"], `[${this.name}]: `) +
+      styleText(["blueBright"], this.message)
     );
   }
 }
